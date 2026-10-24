@@ -121,3 +121,57 @@ document.querySelectorAll('.frame-card,.rule,.logo-card').forEach(card=>{
 });
 document.addEventListener('pointerdown',event=>{const ripple=document.createElement('span');ripple.className='tap-ripple';ripple.style.left=event.clientX+'px';ripple.style.top=event.clientY+'px';document.body.appendChild(ripple);setTimeout(()=>ripple.remove(),700)});
 
+// Browsers may block audible autoplay. Try immediately, then unlock on the first gesture.
+const backgroundMusic=document.querySelector('#backgroundMusic');
+const musicToggle=document.querySelector('#musicToggle');
+const musicLabel=musicToggle?.querySelector('.music-toggle-label');
+let musicPausedByUser=false;
+
+function updateMusicState(state){
+  if(!musicToggle||!musicLabel)return;
+  const playing=state==='playing';
+  musicToggle.classList.toggle('is-playing',playing);
+  musicToggle.classList.toggle('is-blocked',state==='blocked');
+  musicToggle.setAttribute('aria-pressed',String(playing));
+  musicToggle.setAttribute('aria-label',playing?'暂停背景音乐':'播放背景音乐');
+  musicLabel.textContent=playing?'SOUND ON':state==='blocked'?'TAP FOR SOUND':'SOUND OFF';
+}
+
+async function playBackgroundMusic(){
+  if(!backgroundMusic||musicPausedByUser)return false;
+  try{
+    backgroundMusic.volume=.58;
+    await backgroundMusic.play();
+    updateMusicState('playing');
+    return true;
+  }catch(error){
+    updateMusicState('blocked');
+    return false;
+  }
+}
+
+function unlockBackgroundMusic(event){
+  if(event?.target?.closest?.('#musicToggle'))return;
+  playBackgroundMusic();
+}
+
+if(backgroundMusic&&musicToggle){
+  backgroundMusic.volume=.58;
+  backgroundMusic.addEventListener('playing',()=>updateMusicState('playing'));
+  backgroundMusic.addEventListener('pause',()=>updateMusicState(musicPausedByUser?'paused':'blocked'));
+  musicToggle.addEventListener('click',async()=>{
+    if(backgroundMusic.paused){
+      musicPausedByUser=false;
+      await playBackgroundMusic();
+    }else{
+      musicPausedByUser=true;
+      backgroundMusic.pause();
+    }
+  });
+  document.addEventListener('pointerdown',unlockBackgroundMusic,{once:true,capture:true});
+  document.addEventListener('touchstart',unlockBackgroundMusic,{once:true,capture:true,passive:true});
+  document.addEventListener('keydown',unlockBackgroundMusic,{once:true,capture:true});
+  window.addEventListener('load',playBackgroundMusic,{once:true});
+  playBackgroundMusic();
+}
+
