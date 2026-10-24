@@ -170,6 +170,7 @@ if(backgroundMusic&&musicToggle){
   });
   document.addEventListener('pointerdown',unlockBackgroundMusic,{once:true,capture:true});
   document.addEventListener('touchstart',unlockBackgroundMusic,{once:true,capture:true,passive:true});
+  document.addEventListener('wheel',unlockBackgroundMusic,{once:true,capture:true,passive:true});
   document.addEventListener('keydown',unlockBackgroundMusic,{once:true,capture:true});
   window.addEventListener('load',playBackgroundMusic,{once:true});
   playBackgroundMusic();
