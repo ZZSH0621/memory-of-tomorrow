@@ -1,0 +1,126 @@
+.film-preview {
+  width: min(440px, 100%);
+  margin: -3vh 0 4vh;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  background: var(--paper2);
+  display: block;
+  overflow: hidden;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.film-preview-media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 7;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ink);
+}
+
+.film-preview-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(16, 44, 49, .08), rgba(16, 44, 49, .28));
+}
+
+.film-preview-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  display: block;
+  filter: saturate(.9) contrast(1.04);
+  transition: transform .55s cubic-bezier(.2, .8, .2, 1), filter .35s ease;
+}
+
+.film-preview-play {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  padding-left: 4px;
+  color: var(--paper);
+  background: var(--orange);
+  border: 1px solid var(--ink);
+  box-shadow: 5px 5px 0 rgba(21, 21, 21, .9);
+  font-size: 18px;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.film-preview-meta {
+  min-height: 54px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.film-preview-meta > span {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.film-preview-meta b,
+.film-preview-meta small {
+  font: 10px var(--mono);
+  letter-spacing: .1em;
+}
+
+.film-preview-meta small {
+  color: var(--muted);
+  letter-spacing: .04em;
+}
+
+.film-preview-meta i {
+  color: var(--orange);
+  font: normal 22px/1 var(--mono);
+}
+
+.film-preview:hover {
+  transform: translate(-5px, -5px);
+  box-shadow: 9px 9px 0 var(--orange);
+}
+
+.film-preview:hover .film-preview-media img {
+  transform: scale(1.05);
+  filter: saturate(1.05) contrast(1.06);
+}
+
+.film-preview:hover .film-preview-play {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow: 3px 3px 0 rgba(21, 21, 21, .9);
+}
+
+@media (max-width: 900px) {
+  .film-preview {
+    width: 100%;
+    margin: -6vw 0 10vw;
+  }
+
+  .film-preview-media {
+    aspect-ratio: 16 / 9;
+  }
+
+  .film-preview-meta > span {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-preview,
+  .film-preview-media img,
+  .film-preview-play {
+    transition: none;
+  }
+}
